@@ -1,0 +1,187 @@
+<mat-card>
+    <div fxLayout="column">
+        <div fxFlex="50">
+            <div fxFlex="20" fxFlexOffset="2" class="card">
+                <div fxLayout="row" *ngFor=" let coin of result">
+                    <div *ngIf="coin.CoinInfo.Name == this.route.snapshot.paramMap.get('id')">
+
+                        <div fxLayout="column">
+                            <mat-card fxFlex="10">
+                                <mat-card-title>
+                                    <h1 class="center">{{coin.CoinInfo.FullName}}</h1>
+                                </mat-card-title>
+                            </mat-card>
+                            <mat-card fxFlex="40">
+                                <img mat-card-image class="image" src="https://www.cryptocompare.com{{coin.CoinInfo.ImageUrl}}">
+                            </mat-card>
+
+
+                            <mat-card fxFlex="10">
+                                <mat-card-actions>
+
+                                    <mat-icon (click)="openDialog()">add_box</mat-icon>
+                                    <button mat-button></button>
+                                </mat-card-actions>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div fxFlex="70" fxFlexOffset="5">
+                <div fxLayout="column">
+                    <div fxFlex="30">
+                        <div fxLayout="row" *ngFor=" let coin of result">
+                            <div *ngIf="coin.CoinInfo.Name == this.route.snapshot.paramMap.get('id')">
+                                <div fxLayout="column">
+                                    <div fxFlex="40" fxLayout="row">
+                                        <mat-card fxFlex="60">
+                                            <mat-card-title>
+                                                <h1 class="center">{{coin.DISPLAY.USD.PRICE}} </h1>
+                                                <p class="txt">{{coin.DISPLAY.USD.LASTUPDATE}} </p>
+                                            </mat-card-title>
+                                        </mat-card>
+                                        <mat-card fxFlex="20">
+                                            <mat-card-title>
+                                                <h1 [ngStyle]="{'color':coin.RAW.USD.CHANGEPCT24HOUR > 0 ? 'green' : 'red' }" class="center">{{coin.RAW.USD.CHANGEPCT24HOUR.toFixed(2)}} %
+                                                </h1>
+                                            </mat-card-title>
+                                        </mat-card>
+                                    </div>
+                                    <div fxFlex="20">
+                                        <div fxLayout="row">
+                                            <mat-card fxFlex="12">
+                                                <mat-card-title>Mkt. Cap.</mat-card-title>
+                                                <p class="val">{{coin.DISPLAY.USD.MKTCAP}}</p>
+                                            </mat-card>
+                                            <mat-card fxFlex="28">
+                                                <mat-card-title>Vol. 24H </mat-card-title>
+                                                <p class="val"> {{coin.DISPLAY.USD.VOLUME24HOUR}} ({{coin.DISPLAY.USD.VOLUME24HOURTO}}) </p>
+                                            </mat-card>
+                                            <mat-card fxFlex="12">
+                                                <mat-card-title>Open 24h </mat-card-title>
+                                                <p class="val">{{coin.DISPLAY.USD.OPEN24HOUR}} </p>
+                                            </mat-card>
+                                            <mat-card fxFlex="18">
+                                                <mat-card-title>Low/High 24h </mat-card-title>
+                                                <p class="val">{{coin.DISPLAY.USD.LOWDAY}} - {{coin.DISPLAY.USD.HIGHDAY}} </p>
+                                            </mat-card>
+                                            <mat-card fxFlex="30">
+                                                <mat-card-title>Last trade </mat-card-title>
+                                                <p class="val">{{coin.DISPLAY.USD.LASTVOLUME}} ( {{coin.DISPLAY.USD.LASTVOLUMETO}} ) / {{coin.DISPLAY.USD.LASTMARKET}}
+                                                </p>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex="90">
+                        <mat-card class="example-card ">
+                            <mat-card-header>
+                                <div>
+                                    <mat-card-title>Chart :</mat-card-title>
+                                    <mat-card-subtitle>(1 Month)</mat-card-subtitle>
+                                </div>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <div class="">
+                                    {{id}}
+                                    <div *ngIf="chart">
+                                        {{id}}
+                                        <canvas id="canvas">{{ chart }}</canvas>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button mat-button></button>
+                                <button mat-button></button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div fxFlex="50">
+            <mat-tab-group class=" long">
+                <mat-tab label="NEWS">
+                    <div *ngFor=" let art of article">
+                        <div fxLayout="row">
+                            <mat-card fxFlex="20">
+                                <img mat-card-image class="img" src="{{art.source_info.img}}">
+                            </mat-card>
+
+                            <mat-card fxFlex="80">
+
+                                <div fxLayout="column">
+                                    <div fxFlex="20" fxLayout="row" class="news-data">
+                                        <div fxFlex="30" class="news-source"> {{art.source_info.name}} </div>
+                                        <div fxFlex="20" class="news-date"> {{(art.published_on/60000000).toFixed(0)}} min ago</div>
+                                    </div>
+
+
+                                    <div fxFlex="20">
+                                        <mat-card-title><a href="{{art.url}}"> {{art.title}}</a></mat-card-title>
+                                    </div>
+                                    <mat-list>
+                                        <mat-divider></mat-divider>
+                                    </mat-list>
+                                    <div fxFlex="40">{{art.body.substr(0,200)}} [...]</div>
+                                    <mat-list>
+                                        <mat-divider></mat-divider>
+                                    </mat-list>
+                                    <div fxFlex="20" class="news-footer"> Categories: {{art.categories}}</div>
+
+
+
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="MARKETS">
+
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 m-auto">
+
+                        <ng-container matColumnDef="Market">
+                            <th mat-header-cell *matHeaderCellDef> Market </th>
+                            <td mat-cell *matCellDef="let m">{{m.MARKET}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Price">
+                            <th mat-header-cell *matHeaderCellDef> Price </th>
+                            <td mat-cell *matCellDef="let m"> {{m.PRICE.toFixed(2)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Open 24H">
+                            <th mat-header-cell *matHeaderCellDef> Open 24H </th>
+                            <td mat-cell *matCellDef="let m">{{m.OPEN24HOUR.toFixed(3)}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Range 24H">
+                            <th mat-header-cell *matHeaderCellDef> Range 24H </th>
+                            <td mat-cell *matCellDef="let m"> L: {{m.LOW24HOUR.toFixed(2)}} <br> H: {{m.HIGH24HOUR.toFixed(2)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Last trade">
+                            <th mat-header-cell *matHeaderCellDef> Last trade </th>
+                            <td mat-cell *matCellDef="let m">Ƀ {{m.LASTTRADEID}} <br> $ {{m.LASTVOLUMETO.toFixed(3)}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="Volume 24H">
+                            <th mat-header-cell *matHeaderCellDef> Volume 24H</th>
+                            <td mat-cell *matCellDef="let m">Ƀ {{m.VOLUME24HOUR.toFixed(3)}} <br>$ {{m.VOLUME24HOURTO.toFixed(3)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Change 24H">
+                            <th mat-header-cell *matHeaderCellDef> Change 24H</th>
+                            <td mat-cell *matCellDef="let m" [ngStyle]="{'color':m.CHANGE24HOUR.toFixed(2) > 0 ? 'green' : 'red' }">
+                                $ {{m.CHANGEPCT24HOUR.toFixed(2)}} | {{m.CHANGEPCT24HOUR.toFixed(2)}} %</td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [length]="50" [pageSize]="10" [pageSizeOptions]="[5, 10,20,30,50]">
+                    </mat-paginator>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+
+</mat-card>

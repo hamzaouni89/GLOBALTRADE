@@ -1,0 +1,25 @@
+<div mat-dialog-content>
+
+    <mat-form-field>
+        <input placeholder="Coin" matInput [(ngModel)]="data.coin">
+    </mat-form-field>
+    <mat-form-field>
+        <input placeholder="Amount" matInput [(ngModel)]="data.amount">
+    </mat-form-field>
+    <mat-form-field>
+        <input placeholder="Price" matInput [(ngModel)]="data.Buy_Price">
+    </mat-form-field>
+    <mat-form-field>
+        <input placeholder="Currency" matInput [(ngModel)]="data.Currency">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <input matInput [matDatepicker]="picker" placeholder="Bought On" matInput [(ngModel)]="data.Bought">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" mat-raised-button color="warn">Exit</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial mat-raised-button color="primary" type="submit">Submit</button>
+</div>

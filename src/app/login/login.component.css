@@ -1,0 +1,28 @@
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.disp{
+  margin:100px auto 100px auto;
+  display: block;
+  height: 500px ;
+  width: 500px;
+  background-color: #d6d9deba;
+}
+
+.ButtonForm {
+  width: 100%;
+}
+
+.image {
+  background-image: url(../../assets/images/bit.jpg)
+}
+ 
+.align {
+  align-items: center ;
+}

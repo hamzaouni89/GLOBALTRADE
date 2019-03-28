@@ -1,0 +1,22 @@
+<form [formGroup]="registerForm" class="example-form">
+    <mat-form-field class="example-full-width">
+        <input matInput type="text" formControlName="nom" placeholder="Nom">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput type="text" formControlName="prenom" formControlName="prenom" placeholder="prenom">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput type="email" formControlName="email" placeholder="email">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput type="password" formControlName="password" placeholder="password">
+        <label class="error">{{errorMessage}}</label>
+        <label class="success">{{successMessage}}</label>
+    </mat-form-field>
+
+    <button type="submit" class="ButtonForm" (click)="tryRegister(registerForm.value)" mat-flat-button color="primary">Register</button>
+
+</form>
+<br>
+<button type="button" class="ButtonForm" mat-flat-button color="primary" (click)="tryGoogleLogin()">Register with
+    Google</button>

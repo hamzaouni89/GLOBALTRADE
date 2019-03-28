@@ -1,0 +1,81 @@
+ .example-card {
+     height: 550px;
+     display: flex;
+     flex-direction: column;
+ }
+ 
+ .card {
+     height: 650px;
+ }
+ .long{
+    height: 800px!important;
+ }
+  .news-source {
+    
+    font-size: 13px;
+    font-weight: bold;
+    color: #f79a35;
+    
+}
+.news-footer {
+    overflow: hidden;
+    line-height: 27px;
+    color: #999;
+    font-size: 13px;
+}
+table{
+    width: 100%;
+}
+tr td {
+    width: 165px;
+}
+ 
+ .image {
+     width: 180px;
+     height: 180px;
+     margin: 10px;
+ }
+ .img{
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    
+ 
+ }
+ .largeur{
+     height: 100px;
+ }
+ .center
+ {
+     text-align: center;
+     vertical-align: center;
+ }
+ .news-date {
+    float: left;
+    font-size: 13px;
+    color: #999;
+}
+ .news-data {
+    overflow: hidden;
+    text-align: left;
+}
+ .price{
+     font-size: 25px;
+ }
+ .txt{
+     text-align: end;
+ }
+ .mar{
+     height: 50px;
+ }
+
+
+ mat-card {
+     margin: 5px;
+ }
+ mat-card-title{
+     font-size: 16px;
+ }
+.val{
+    font-size: 12px;
+}

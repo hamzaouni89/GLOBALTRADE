@@ -1,0 +1,102 @@
+<div class="row">
+    <div class="col-md-2">
+      
+        <div class="coin-logo-mobile">
+            <img class="img-responsive" class="img-resp" src="https://www.cryptocompare.com{{result.IMAGEURL}}">
+          </div>
+          <div class="coin-name-v2">
+            <h1 > {{result.FROMSYMBOL}}</h1>
+          </div>
+          <div>
+      
+            <a href=""  class="add-to-portfolio">
+              <span class="fa fa-bar-chart"></span> + Portfolio
+            </a>
+      
+            <a href="" class="coin-follow following ng-animate-disabled" aria-hidden="false">
+              <span class="fa fa-check"></span> Following
+            </a>
+            <a href="" class="coin-unfollow following ng-animate-disabled ng-hide" id="coin-unfollow-already-following"
+              aria-hidden="true">
+              <span class="fa fa-minus"></span> Unfollow
+            </a>
+          </div>
+    </div>
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-7">
+          <div>
+            <h1> {{result.PRICE}} </h1>
+          </div>
+  
+        </div>
+        <div class="col-md-2">
+  
+          <div> %</div>
+        </div>
+  
+      </div>
+      <div class="row">
+        <div class="col-md-1">
+          <div>Mkt. Cap. </div>
+          <div>Ƀ 8.96 M</div>
+        </div>
+        <div class="col-md-3">
+          <div>Vol. 24H</div>
+          <div>XRP 513.44 M (Ƀ 47.34 k)</div>
+        </div>
+  
+        <div class="col-md-2">
+          <div>Open 24h</div>
+          <div>Ƀ 0.00008485</div>
+        </div>
+        <div class="col-md-3">
+          <div>Low/High 24h</div>
+          <div>Ƀ 0.00008482 - Ƀ 0.00009637</div>
+        </div>
+        <div class="col-md-3">
+          <div>Last trade</div>
+          <div>XRP 3,679.00 (Ƀ 0.3299) / ZB </div>
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  
+  </div>
+  
+  <div class="row">
+    <div class="col-md-2">
+  
+      <div  *ngFor="let data of datas">
+  
+  
+        <div class="row">
+          <div class="col-sm-6">
+            <img class="image" src="https://www.cryptocompare.com{{data.CoinInfo.ImageUrl}}">
+          </div>
+          <div class="col-sm-6">
+            <a href="coin/{{data.CoinInfo.Name}}">
+              
+                {{data.CoinInfo.FullName}}<br>
+                {{data.CoinInfo.Name}}
+              
+            </a>
+          </div>
+        </div>
+  
+  
+  
+      </div>
+  
+  
+    </div>
+    <div class="col-md-10">
+  
+  
+    </div>
+  
+  
+  </div>
+  

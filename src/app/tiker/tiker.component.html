@@ -1,0 +1,11 @@
+<marquee behavior="scroll" direction="right" onmouseover="this.stop();" onmouseout="this.start();">
+    <div class="ticker" *ngFor="let data of datas">
+        <a routerLink="coin/{{data.CoinInfo.Name}}">
+            <div class="coins"><span>{{data.CoinInfo.Name}}</span>
+                <img class="image" src="https://www.cryptocompare.com{{data.CoinInfo.ImageUrl}}">
+            </div>
+            <div class="price">{{data.RAW.USD.PRICE}}</div>
+            <div class="price" [ngStyle]="{'color':data.RAW.USD.CHANGEPCT24HOUR > 0 ? 'green' : 'red' }">{{data.RAW.USD.CHANGEPCT24HOUR.toFixed(2)}} %</div>
+        </a>
+    </div>
+</marquee>

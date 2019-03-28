@@ -1,0 +1,155 @@
+<div class="container">
+    <mat-toolbar>
+        <span class="spacer"></span>
+        <!-- <span>Portfolio</span> -->
+        <span class="speacer"></span>
+    </mat-toolbar>
+</div>
+<div *ngIf="afficher">
+
+    <div class="table" fxLayout="row top">
+        <mat-card fxFlex="15" fxFlexOffset="25">
+
+            <mat-card-title>Acquisition Cost </mat-card-title>
+            <mat-card-content type="number">{{totalCost}}</mat-card-content>
+        </mat-card>
+        <mat-card fxFlex="15">
+            <mat-card-title>Realized P/L </mat-card-title>
+            <mat-card-content type="number"></mat-card-content>
+        </mat-card>
+        <mat-card fxFlex="15">
+            <mat-card-title>Profit / Loss </mat-card-title>
+            <mat-card-content>{{prof_loss.toFixed(2)}}</mat-card-content>
+        </mat-card>
+        <mat-card fxFlex="15">
+            <mat-card-title>Holdings </mat-card-title>
+            <mat-card-content>
+                {{sum}}
+                <!--   <div *ngFor="let item of lists ; index as i">
+
+
+                <div> {{((item.amount*item.current)-(item.amount*item.Buy_Price)).toFixed(2)}}</div>
+
+            </div> -->
+
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+    <div class="table">
+        <div fxLayout="row ">
+            <mat-card fxFlex="20" fxFlexOffset="5">
+
+                <mat-card-title>Coin</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Price</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Amount</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Buy price</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Total Value</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Profit/Loss</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Change</mat-card-title>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-title>Buy/Sell</mat-card-title>
+
+            </mat-card>
+
+        </div>
+
+
+
+
+        <div *ngFor="let item of coins">
+
+            <!--  <div *ngFor=" let coin of result">
+
+            <div fxLayout="row" *ngIf="(coin.CoinInfo.Name == item.coin)  "> -->
+
+            <mat-card fxFlex="20" fxFlexOffset="5">
+
+                <mat-card-content><img class="image" src="https://www.cryptocompare.com{{item.url}}">{{item.coin}}
+                </mat-card-content>
+                <mat-card-footer></mat-card-footer>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>{{item.current}}</mat-card-content>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>{{item.amount}}</mat-card-content>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>{{item.Buy_Price}}</mat-card-content>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>{{(item.amount*item.current.toFixed(2))}} </mat-card-content>
+
+
+            </mat-card>
+
+            <mat-card fxFlex="10">
+                <mat-card-content>{{((item.amount*item.current)-(item.amount*item.Buy_Price)).toFixed(2)}}</mat-card-content>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>
+                    {{((((item.amount*item.current)-(item.amount*item.Buy_Price))/((item.amount*item.Buy_Price)))*100).toFixed(2)}}%
+                </mat-card-content>
+
+            </mat-card>
+            <mat-card fxFlex="10">
+                <mat-card-content>
+
+
+                    <mat-icon class="buy" (click)="openDialog()">add_box</mat-icon>
+                    <mat-icon class="sell" (click)="sellcoin(item.key)">indeterminate_check_box</mat-icon>
+                    <!--   <span>
+                            <button mat-raised-button (click)="openDialog()">
+                               
+                            </button></span>
+                <span><button mat-raised-button (click)="sellcoin()">
+                                
+                            </button></span> -->
+                </mat-card-content>
+
+            </mat-card>
+
+
+
+        </div>
+
+        <!--   </div>
+
+    </div> -->
+    </div>
+</div>
+<div fxLayout="column">
+    <div class="table" *ngIf="!afficher" fxFlex="row">
+
+        <button mat-raised-button (click)="openDialog()">
+            <mat-icon>add</mat-icon>Get started
+        </button>
+
+    </div>
+</div>

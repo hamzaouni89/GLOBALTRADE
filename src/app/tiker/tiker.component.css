@@ -1,0 +1,25 @@
+.image {
+    width: 25px;
+    height: 25px;
+}
+
+.ticker {
+    display: inline-block;
+    text-align: center;
+}
+
+.coins,
+.price {
+    margin: 10px 20px;
+    text-align: center;
+}
+
+span {
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+

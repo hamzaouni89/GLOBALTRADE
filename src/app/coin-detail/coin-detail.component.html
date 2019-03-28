@@ -1,0 +1,682 @@
+<div class="main-wrapper">
+  <div class="container">
+    <style>
+      .coin-nav .nav > li > a{padding: 0 15px;}
+      .coin-nav .nav > li.active > a{padding: 0 15px;}
+      .coin-nav .nav > li > a:hover{padding: 0 15px;}
+    </style>
+    <script type="text/ng-template" id="streamers/coin-profile-look-v2.html">
+    <div class="profile-col-sidebar sidebar-right sidebar-rightv2" ng-class="{'has-portfolio': portfolioSummary.hasCurrentHoldings()}">
+      <div class="wrapper-ci">
+        <div class="ci-trigger">
+          <div class="wrapper-pageinfo">
+            <div class="coin-from" ></div>
+            <div class="coin-from" >Sale starts in</div>
+            <div class="coin-from" >Sale ends in</div>
+            <div class="coin-logo">
+              <div class="coin-logo-mobile">
+              </div>
+            </div>
+            <div class="coin-name-v2">
+            </div>
+          </div>
+          <div class="profile-things clearfix">
+            <div class="profile-actions">
+              <div class="profile-action">
+                <a href=""  class="coin-follow not-following ng-animate-disabled" id="coin-follow-not-already-following">
+                  <span class="fa fa-plus"></span> Follow
+                </a>
+              </div>
+              <div 
+                 class="profile-action"
+                 ng-mouseover="followingHover=true" 
+                 ng-mouseleave="followingHover=false">
+                  <a href=""  ng-show="!followingHover" class="coin-follow following ng-animate-disabled" id="coin-follow-already-following">
+                    <span class="fa fa-check"></span> Following
+                  </a>
+                  <a href=""  ng-show="followingHover" class="coin-unfollow following ng-animate-disabled" id="coin-unfollow-already-following">
+                    <span class="fa fa-minus"></span> Unfollow
+                  </a>
+              </div>
+              <div class="profile-action">
+                <a href=""  class="add-to-portfolio">
+                  <span class="fa fa-bar-chart"></span> + Portfolio
+                </a>
+                <div class="portfolio-v2" >
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>		
+    <div class="profile-col-main">
+      <div itemscope itemtype="http://schema.org/Product">
+        <div class="header-coin header-coin-new affix row" id="header-profile">
+          <div class="profile-header-main clearfix">
+            <div class="coin-logo">
+              <div class="coin-logo-mobile">
+                <img ng-src="{{pageInfo.getLogo()}}?width=200" class="img-responsive"/>			
+              </div>
+            </div>
+            <div class="coin-name" >					
+              <h1 itemprop="name" ng-if="pageInfo.isTradingStage()">
+                {{pageInfo.getH1Text()+' - '+pageInfo.getToSymbol()}}
+              </h1>
+              <h1 itemprop="name" ng-if="pageInfo.isICOStage()">
+                {{pageInfo.getInfoName()}}
+              </h1>
+              <meta itemprop="name" content="{{pageInfo.getSymbol()}}"/>
+              <meta itemprop="name" content="{{pageInfo.getInfoName()}}"/>
+              <meta itemprop="name" content="{{pageInfo.getSymbol() + ' ' + pageInfo.getToSymbol()}}"/>
+              <meta itemprop="description" content="{{pageInfo.getInfoDescription()}}"/>
+              <meta itemprop="logo" content="https://www.cryptocompare.com{{pageinfo.getlogo()}}/?width=200"/>
+                <div class="last-update-v2" ng-if="pageInfo.isTradingStage() && currencyDisplay.length>1">
+                    <div class="dropdown-coins dropdown-coins-v2">
+                      <ul class="nav nav-pills nav-actions">
+                        <li class="dropdown select-currencies-fixed" uib-dropdown on-toggle="toggled(open)">
+                          <a href="" class="coin-currencies" uib-dropdown-toggle>
+                            <span class="caret"></span>
+                          </a>
+                          <div class="uib-dropdown-menu with-arrow with-arrow-right"
+                            ng-class="{'one-column-dropdown':totalSubs<6,'three-column-dropdown':totalSubs>=6,'with-scroll-dropdown':totalSubs>=15}"
+                            ng-if="currencyDisplay.length>1"
+                          >
+                            <ul>
+                              <li ng-repeat="(key,currency) in currencyDisplay" ng-hide="selectedCurrency.Symbol==currency.Symbol">
+                                <a href="" ng-click="changeCurrency(key,true)" >
+                                  {{currency.Symbol}}
+                                </a>
+                              </li>
+                              <li ng-repeat="(keySec,currencySec) in currencySecondaryDisplay" ng-hide="selectedCurrency.Symbol==currencySec.Symbol">
+                                <a href="" ng-click="changeCurrency(keySec,false)">
+                                {{currencySec.Symbol}}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>				
+                    </div>
+                  </div>							
+              <div class="price-main" ng-if="pageInfo.isTradingStage()">
+                <div class="price-value" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                  <meta itemprop="priceCurrency" content="{{selectedCurrency.DATA.TOSYMBOL}}"/>
+                  <meta itemprop="price" content="{{selectedCurrency.DATA.PRICE}}"/>
+                  <div
+                    ng-class="{'highlight-unchanged':selectedCurrency.VISUAL.PRICEUNCHANGED, 'highlight-up':selectedCurrency.VISUAL.PRICEUP, 'highlight-down':selectedCurrency.VISUAL.PRICEDOWN}">
+                    {{selectedCurrency.DISPLAY.PRICE}}
+                    <div class="last-update-value"
+                      ng-class="{'highlight-text':selectedCurrency.VISUAL.LASTUPDATE}" title="{{selectedCurrency.DISPLAY.LASTUPDATE}}">
+                        <span class="fa fa-refresh" ng-class="{'fa-spin':selectedCurrency.VISUAL.LASTUPDATE}"></span> {{dateParsing.formatFromNow(selectedCurrency.DATA.LASTUPDATE*1000)}}
+                    </div>		
+                  </div>
+                </div>
+                <div class="trend-price">
+                  <i class="fa" ng-class="{'up-text fa-caret-up':selectedCurrency.DATA.CHANGE24HOUR>0, 'down-text fa-caret-down':selectedCurrency.DATA.CHANGE24HOUR<0, 'unchanged-text':selectedCurrency.DATA.CHANGE24HOUR===0}"></i>
+                  <div class="trend-value" ng-class="{'up-text':selectedCurrency.DATA.CHANGE24HOUR>0, 'down-text':selectedCurrency.DATA.CHANGE24HOUR<0, 'unchanged-text':selectedCurrency.DATA.CHANGE24HOUR==0}">
+                    {{selectedCurrency.DISPLAY.CHANGEPCT24HOUR}}%
+                  </div>
+                </div>
+              </div>
+              <div ng-if="pageInfo.isICOStage()">
+                <countdown-timer ng-if="pageInfo.isICOUpcoming() && pageInfo.hasICOStartDate()" timer-end-js-ts="pageInfo.getICOStartDate()" function-to-call="pageInfo.changeICOToOngoing"></countdown-timer>
+                <countdown-timer ng-if="pageInfo.isICOOngoing() && pageInfo.hasICOEndDate()" timer-end-js-ts="pageInfo.getICOEndDate()" function-to-call="pageInfo.changeICOToFinished"></countdown-timer>
+                <div ng-if="(pageInfo.isICOUpcoming() && !pageInfo.hasICOStartDate())" class="header-time-downcounter">
+                  <div class="counter-item" >
+                    <div class="timer-counter-value">ANNOUNCED</div>
+                    <div class="timer-counter-separator">no start date</div>
+                  </div>
+                </div>
+                <div ng-if="(pageInfo.isICOOngoing() && !pageInfo.hasICOEndDate())" class="header-time-downcounter">
+                  <div class="counter-item" >
+                    <div class="timer-counter-value">ONGOING</div>
+                    <div class="timer-counter-separator">no end date</div>
+                  </div>
+                </div>
+                <div class="wrapper-sponsored" ng-if="pageInfo.hasIndividualSponsor() && shouldShowButton()"">
+                  <a ng-href="{{pageInfo.getIndividualSponsorUrl()}}" target="_blank" class="start-trading-now btn ng-scope">
+                    <span class="fa fa-play"></span> {{pageInfo.getIndividualSponsorText()}}
+                  </a>
+                </div>											
+              </div>
+              <div class="ico-status visible-xs" ng-if="pageInfo.isICOStage()">
+                {{pageInfo.getICOStatus()}}
+              </div>
+              <ad-desktop-and-mobile-profile-view-page></ad-desktop-and-mobile-profile-view-page>
+              <div
+                class="wrapper-sponsored"
+                ng-if="pageInfo.hasIndividualSponsor() && shouldShowButton()"
+                ng-class="{ isIcoUO: pageInfo.isICOUpcoming() || pageInfo.isICOOngoing()}"
+              >
+                <a
+                  class="start-trading-now btn"
+                  ng-href="{{pageInfo.getIndividualSponsorUrl()}}"
+                  target="_blank"
+                  ng-class="{'with-image': pageInfo.getIndividualSponsorLogo() && pageInfo.getIndividualSponsorLogo().length > 0 }"
+                >		
+                  <span
+                    class="fa fa-play"
+                    ng-if="!pageInfo.getIndividualSponsorLogo() || pageInfo.getIndividualSponsorLogo().length === 0"
+                  >
+                  </span>
+                  <span
+                    class="start-trading-thumb"
+                    ng-if="pageInfo.getIndividualSponsorLogo() && pageInfo.getIndividualSponsorLogo().length > 0"
+                  >
+                  <img ng-src="{{pageInfo.getIndividualSponsorLogo()}}" />
+                  </span>
+                  <span class="start-trading-text">{{pageInfo.getIndividualSponsorText()}}</span>
+                </a>
+              </div>											
+              <div class="profile-actions">
+                <div ng-show="!userManager.isFollowing()" class="profile-action">
+                  <a href="" ng-click="changeFollowingStatus()" class="coin-follow not-following ng-animate-disabled">
+                    <span class="fa fa-plus"></span> Follow
+                  </a>
+                </div>
+                <div ng-show="userManager.isFollowing()"
+                   class="profile-action"
+                   ng-mouseover="followingHover=true" 
+                   ng-mouseleave="followingHover=false">
+                    <a href="" ng-click="changeFollowingStatus()" ng-show="!followingHover" class="coin-follow following ng-animate-disabled">
+                      <span class="fa fa-check"></span> Following
+                    </a>
+                    <a href="" ng-click="changeFollowingStatus()" ng-show="followingHover" class="coin-unfollow following ng-animate-disabled">
+                      <span class="fa fa-minus"></span> Unfollow
+                    </a>
+                </div>
+                <div class="profile-action" >
+                  <a href="" ng-click="addCoinToPortfolio()" class="add-to-portfolio">
+                    <span class="fa fa-bar-chart"></span> + Portfolio
+                  </a>
+                </div>
+              </div>
+              <div class="add-to-portfolio-container" ng-if="portfolioSummary.hasCurrentHoldings()">
+                <a href="/portfolio" class="my-portfolio">
+                  <span class="fa fa-bar-chart"></span>
+                  <span class="my-portfolio-text">My Portfolio</span>
+                </a>							
+                <b>{{portfolioSummary.getCurrentHoldingsDisplay()}}</b> currently valued at <b>{{getTotalCurrentHoldingsValue()}}</b>
+              </div>												
+              <div class="profile-props clearfix" ng-if="pageInfo.isICOStage()">
+                <div class="width20p">
+                  <div class="propblock propblock-borderflash w20p" ng-if="pageInfo.isICOUpcoming()">
+                    <div class="propblock-label">
+                      Start date
+                    </div>
+                    <div class="propblock-body" ng-if="pageInfo.hasICOStartDate()">
+                      {{pageInfo.getICOStartDate() | date: "yyyy, dd MMM H:mm:ss" }}
+                    </div>
+                    <div class="propblock-body" ng-if="!pageInfo.hasICOStartDate()">
+                      Not Available
+                    </div>
+                  </div>
+                  <div class="propblock propblock-borderflash w20p" ng-if="pageInfo.isICOOngoing()">
+                    <div class="propblock-label">
+                      End date
+                    </div>
+                    <div class="propblock-body" ng-if="pageInfo.hasICOEndDate()">
+                      {{pageInfo.getICOEndDate() | date: "yyyy, dd MMM H:mm:ss" }}
+                    </div>
+                    <div class="propblock-body" ng-if="!pageInfo.hasICOEndDate()">
+                      Not Available
+                    </div>
+                  </div>
+                  <div class="propblock w20p hidden-xs">
+                    <div class="propblock-label">
+                      Status
+                    </div>
+                    <div class="propblock-body" >
+                      {{pageInfo.getICOStatus()}}
+                    </div>
+                  </div>	
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Token Platform
+                    </div>
+                    <div class="propblock-body">
+                      {{pageInfo.getICOTokenType()}}
+                    </div>
+                  </div>
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Start price
+                    </div>
+                    <div class="propblock-body">
+                      {{pageInfo.getICOStartPrice()}}
+                    </div>
+                  </div>	
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Coins offered
+                    </div>
+                    <div class="propblock-body">
+                      {{pageInfo.getICOCoinsOffered()}}
+                    </div>
+                  </div>
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Sale Website
+                    </div>
+                    <div class="propblock-body">
+                      <a ng-href="{{pageInfo.getICOWebsite()}}" target="_blank"><i class="fa fa-external-link"></i>{{pageInfo.getInfoName()}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="profile-props clearfix" ng-if="pageInfo.isTradingStage()">
+                <div class="width20p">
+                  <div class="propblock propblock-borderflash w20p">
+                    <div class="propblock-label">
+                      Mkt. Cap. <i class="fa fa-info-circle" tooltip-placement="bottom" uib-tooltip="When calculating Market Capitalization (market cap), we account for all coins in circulation, including those held by team members or the company. This also includes coins in smart contracts or escrow. If the coins have been issued and have not been burned, they will be accounted for in the market cap."></i>
+                    </div>
+                    <div class="propblock-body" ng-class="{'highlight-text': selectedCurrency.VISUAL.PRICEUP || selectedCurrency.VISUAL.PRICEDOWN, 'highlight-up': selectedCurrency.VISUAL.PRICEUP, 'highlight-down': selectedCurrency.VISUAL.PRICEDOWN}">
+                      {{selectedCurrency.DISPLAY.MKTCAP || 'N/A'}}
+                    </div>
+                  </div>
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Vol. 24H
+                    </div>
+                    <div class="propblock-body" ng-class="{'highlight-text': selectedCurrency.VISUAL.VOLUME24HOUR || selectedCurrency.VISUAL.VOLUME24HOURTO}">
+                      <span
+                        title="{{selectedCurrency.DISPLAY.VOLUME24HOUR}}"
+                        ng-bind="selectedCurrency.DISPLAY.VOLUME24HOUR_SHORT || 'N/A'"
+                      /> 
+                      <span
+                        title="{{selectedCurrency.DISPLAY.VOLUME24HOURTO}}"
+                      >
+                        <i ng-if="selectedCurrency.DISPLAY.VOLUME24HOURTO_SHORT">{{'(' + selectedCurrency.DISPLAY.VOLUME24HOURTO_SHORT + ')'}}</i>
+                      </span>
+                    </div>
+                  </div>	
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Open 24h
+                    </div>
+                    <div class="propblock-body" ng-class="{'highlight-text': selectedCurrency.VISUAL.OPEN24HOUR}">
+                      <span
+                        ng-bind="selectedCurrency.DISPLAY.OPEN24HOUR || 'N/A'"
+                      />
+                    </div>
+                  </div>
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Low/High 24h
+                    </div>
+                    <div class="propblock-body" ng-class="{'highlight-text':selectedCurrency.VISUAL.HIGH24HOUR || selectedCurrency.VISUAL.LOW24HOUR}">
+                      <span
+                        ng-bind="selectedCurrency.DISPLAY.LOW24HOUR || 'N/A'"
+                      />
+                      -
+                      <span
+                        ng-bind="selectedCurrency.DISPLAY.HIGH24HOUR || 'N/A'"
+                      />
+                    </div>
+                  </div>	
+                  <div class="propblock w20p">
+                    <div class="propblock-label">
+                      Last trade
+                    </div>
+                    <div class="propblock-body" ng-class="{'highlight-text':selectedCurrency.VISUAL.LASTVOLUME}">
+                      <span ng-if="selectedCurrency.DISPLAY.LASTVOLUME">
+                        <i> {{selectedCurrency.DISPLAY.LASTVOLUME+' ('+selectedCurrency.DISPLAY.LASTVOLUMETO+')'}}{{' / '}}</i>
+                      </span>
+                      <span
+                        ng-bind="selectedCurrency.DISPLAY.LASTMARKET || 'N/A'"
+                      />
+                    </div>
+                  </div>																		
+                </div>
+              </div>
+              <top-alerts></top-alerts>
+            </div>						
+            <div class="currencies-vs" ng-if="pageInfo.isTradingStage()">
+              <div class="nav-currencies">
+                <ul class="nav nav-pills">
+                  <li ng-repeat="(key,currency) in currencyDisplay" ng-class="{'active':currency.Symbol==selectedCurrency.Symbol}">
+                    <a href='' ng-click="changeCurrency(key,true)">
+                      <span class="label" ng-class="{'unchanged-text':currency.DATA.CHANGE24HOUR==0,'down-text':currency.DATA.CHANGE24HOUR<0,'up-text':currency.DATA.CHANGE24HOUR>0}">
+                        {{currency.DISPLAY.CHANGEPCT24HOUR}}% <i class="fa" ng-class="{'fa-caret-down':currency.DISPLAY.CHANGE24HOUR<0,'fa-caret-up':currency.DISPLAY.CHANGE24HOUR>0}"></i>
+                      </span>{{currency.Symbol}}
+                    </a>
+                  </li>
+                  <li class="dropdown-coins" ng-show="currencySecondaryDisplay.length>0" uib-dropdown on-toggle="toggled(open)" ng-class="{'active':currencyIsInSecondary}">
+                    <a class="toggle-coins" href="" uib-dropdown-toggle>
+                      ...<span class="caret"></span>
+                    </a>
+                    <div class="uib-dropdown-menu dropdown-menu with-arrow with-arrow-right" ng-class="{'one-column-dropdown':totalSecondarySubs<6,'two-column-dropdown':totalSecondarySubs>=6&&totalSecondarySubs<11,'four-column-dropdown':totalSecondarySubs>=11&&totalSecondarySubs<21,'five-column-dropdown':totalSecondarySubs>=21}">
+                      <ul>
+                        <li ng-repeat="(keySec,currencySec) in currencySecondaryDisplay">
+                          <a href="" ng-click="changeCurrency(keySec,false)">
+                            {{currencySec.Symbol}}
+                            <span ng-class="{'down-text':currencySec.DISPLAY.CHANGEPCT24HOUR<0,'up-text':currencySec.DISPLAY.CHANGEPCT24HOUR>=0}">
+                              ({{currencySec.DISPLAY.CHANGEPCT24HOUR}}%)
+                            </span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="coin-tools" id="coin-tools">
+            <div class="toolbar-wrapper" id="toolbar-wrapper">
+              <div class="toolbar-container">
+                <div class="coin-name-small pull-left">
+                  <div class="hidden-xs hidden-sm">{{pageInfo.getH1Text()}}</div>
+                  <div class="hidden-xs hidden-sm hidden-md hidden-lg">{{pageInfo.getH1Text()}}</div>
+                </div>
+                <div class="coin-nav">
+                  <div class="coin-actions pull-right">
+                    <ul class="nav nav-pills nav-actions">
+                      <li class="dropdown select-currencies-fixed" uib-dropdown on-toggle="toggled(open)">
+                        <span class="coin-symbol" ng-if="pageInfo.isTradingStage()">1 {{fromSymbol}} = </span>
+                        <span class="ico-status-text" ng-if="pageInfo.isICOUpcoming()">Starts</span>
+                        <span class="ico-status-text" ng-if="pageInfo.isICOOngoing()">Ends</span>
+                        <countdown-timer ng-if="pageInfo.isICOUpcoming() && pageInfo.hasICOStartDate()" timer-end-js-ts="pageInfo.getICOStartDate()" function-to-call="pageInfo.changeICOToOngoing"></countdown-timer>
+                        <countdown-timer ng-if="pageInfo.isICOOngoing() && pageInfo.hasICOEndDate()" timer-end-js-ts="pageInfo.getICOEndDate()" function-to-call="pageInfo.changeICOToFinished"></countdown-timer>
+                        <div ng-if="(pageInfo.isICOUpcoming() && !pageInfo.hasICOStartDate())" class="header-time-downcounter">
+                          <div class="counter-item" >
+                            <div class="timer-counter-value">ANNOUNCED</div>
+                            <div class="timer-counter-separator">no start date</div>
+                          </div>
+                        </div>
+                        <div ng-if="(pageInfo.isICOOngoing() && !pageInfo.hasICOEndDate())" class="header-time-downcounter">
+                          <div class="counter-item" >
+                            <div class="timer-counter-value">ONGOING</div>
+                            <div class="timer-counter-separator">no end date</div>
+                          </div>
+                        </div>
+                        <a href="" class="coin-currencies" uib-dropdown-toggle ng-if="pageInfo.isTradingStage()">
+                          <span class="price-vs-mobile" 
+                            ng-class="{'highlight-up':selectedCurrency.VISUAL.PRICEUP, 'highlight-down':selectedCurrency.VISUAL.PRICEDOWN}">
+                            {{selectedCurrency.DISPLAY.PRICE}}
+                          </span>
+                          <span class="label" ng-class="{'unchanged-text':selectedCurrency.DATA.CHANGE24HOUR==0,'down-background':selectedCurrency.DATA.CHANGE24HOUR<0,'up-background':selectedCurrency.DATA.CHANGE24HOUR>0}">
+                            {{selectedCurrency.DISPLAY.CHANGEPCT24HOUR}}%
+                          </span>
+                          <span class="caret" ng-if="currencyDisplay.length>1"></span>
+                        </a>
+                        <div class="uib-dropdown-menu with-arrow with-arrow-right"
+                          ng-class="{'one-column-dropdown':totalSubs<6,'three-column-dropdown':totalSubs>=6,'with-scroll-dropdown':totalSubs>=15}"
+                          ng-if="currencyDisplay.length>1"
+                          >
+                          <ul>
+                            <li ng-repeat="(key,currency) in currencyDisplay" ng-hide="selectedCurrency.Symbol==currency.Symbol">
+                              <a href="" ng-click="changeCurrency(key,true)" >
+                                {{currency.Symbol}}
+                              </a>
+                            </li>
+                            <li ng-repeat="(keySec,currencySec) in currencySecondaryDisplay" ng-hide="selectedCurrency.Symbol==currencySec.Symbol">
+                              <a href="" ng-click="changeCurrency(keySec,false)">
+                              {{currencySec.Symbol}}
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>				
+                  </div>
+                  <ul class="nav nav-tabs nav-sections pull-left hidden-xs">
+                    <li
+                      ng-repeat="(key,navItem) in secondLevelNav"
+                      ng-class="{'active':isActive(navItem.ViewName), 'hidden-xs hidden-sm hidden-md': key>3, 'visible-sm visible-md visible-lg': key<3}"
+                      class="secmenu-{{navItem.ViewName | lowercase}}"
+                    >
+                      <a href='' ng-click="changeView(navItem.ViewName)">{{navItem.DisplayName}}</a>
+                    </li>
+  
+                    <li class="dropdown hidden-lg" uib-dropdown>
+                      <a href="" class="dropdown-toggle" uib-dropdown-toggle=""><i class="fa fa-ellipsis-v"></i> <span class="caret"></span></a>
+                      <ul class="uib-dropdown-menu">
+                        <li
+                          ng-repeat="(key,navItem) in secondLevelNav"
+                          ng-class="{'active':isActive(navItem.ViewName), 'visible-xs visible-sm visible-md': key>3, 'hidden': key<=3}"
+                          class="secmenusup-{{navItem.ViewName | lowercase}}"
+                        >
+                          <a
+                            href=''
+                            ng-click="changeView(navItem.ViewName)"
+                          >
+                            {{navItem.DisplayName}}
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <ul class="nav nav-pills nav-sections-mobile pull-left">
+                    <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                      <a href="" uib-dropdown-toggle>
+                        {{getActiveName()}}
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="uib-dropdown-menu">
+                        <li ng-repeat="(key,navItem) in secondLevelNav">
+                          <a href='' ng-click="changeView(navItem.ViewName)" ng-hide="isActive(navItem.ViewName)">{{navItem.DisplayName}}</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-body col-body-new" id="col-body" ui-view>
+        <div class="loader-ccc">
+    <div class="loader-ccc-logo"></div>
+    <div class="loader-ccc-sides"></div>
+  </div>
+      </div>
+    </div>
+  </script>
+    <script type="text/ng-template" id="general/followers-info-box.html">
+    <div class="panel panel-sidebar panel-followers">
+      <div class="panel-heading">
+        Followers<div class="count-heading counter-action" ng-bind="getFollowersFormattedNumber()" ng-title="Total followers for this {{type}}"></div>
+      </div>
+      <div class="panel-body" ng-show="socialStats.getValueProperty('CryptoCompare','Followers')>0">
+        <div class="item-follower" ng-repeat="cryptopianFollower in socialStats.getFollowers()">
+          <a ng-href="{{cryptopianFollower.Url}}" tooltip-placement="right" uib-tooltip="View {{cryptopianFollower.Name}}'s full profile.">
+            <img ng-src="{{cryptopianFollower.ImageUrl}}"/>
+          </a>
+        </div>
+      </div>
+      <div class="panel-body" ng-show="socialStats.getValueProperty('CryptoCompare','Followers')==0">
+        <div class="no-followers">
+          Be the first to follow this {{type}}
+        </div>
+      </div>
+    </div>
+  </script>
+    <script type="text/ng-template" id="general/similar-items.html">
+    <div class="panel panel-sidebar panel-similar">
+      <div class="panel-heading">Similar {{type}}</div>
+      <div class="panel-body" ng-show="itemList.length>0">
+        <div class="item-related" ng-repeat="similarItem in itemList">
+          <a ng-href="{{similarItem.Url}}overview"><img ng-src="{{similarItem.ImageUrl}}?anchor=center&mode=crop&width=32&height=32">{{similarItem.Name | cutText:false:12:"..." }}</a>
+          <a href="" ng-click= "changeFollowingStatus(similarItem)"
+              class="btn btn-default btn-xs pull-right"
+              ng-class="{'followed-item':similarItem.isFollowing,'follow-item':!similarItem.isFollowing}"
+              tooltip-placement="right" 
+              uib-tooltip="{{similarItem.Tooltip}}">
+                <span ng-show="similarItem.changingFollowStatus || showLoadingStatus" class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+                <span ng-show="!similarItem.isFollowing && !showLoadingStatus && !similarItem.changingFollowStatus" class="fa fa-plus"></span>
+                <span ng-show="similarItem.isFollowing && !showLoadingStatus && !similarItem.changingFollowStatus" class="fa fa-check "></span>
+          </a>
+        </div>		
+      </div>
+      <div class="panel-body" ng-show="itemList.length==0">
+        We have not yet determined any similar {{type}}.
+      </div>
+    </div>
+  </script>
+    <script type="text/ng-template" id="general/top-alerts.html">
+    <div class="block-alerts" ng-show="pageAlerts.getTopAlerts().length > 0">
+      <uib-alert ng-repeat="alert in pageAlerts.getTopAlerts()" type="{{alert.type}}" close="pageAlerts.removeTopAlert($index)">
+        <div class="alert-icon">
+          <span class="fa fa-info-circle fa-2x"></span>											
+        </div>
+        <div class="alert-content">
+          <p ng-bind-html="alert.msg"></p>
+        </div>
+      </uib-alert>
+    </div>
+      
+  </script>
+    <style>
+      .header-time-downcounter {
+      display: inline-block;
+      margin-left: -15px;
+      margin-top: 20px;
+    }
+    .header-time-downcounter .timer-counter-value {
+      font-size: 45px;
+      font-weight: bold;
+      line-height: 50px;
+    }
+    .header-time-downcounter .timer-counter-separator {
+      color: #999;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .header-time-downcounter .counter-item {
+      float: left;
+      text-align: center;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .lights-off .timer-counter-value {
+      color: #FFF;
+    }
+    .select-currencies-fixed .header-time-downcounter {
+      margin-top: 10px;
+    }
+    .select-currencies-fixed .header-time-downcounter .counter-item {
+      padding-left: 7px;
+      padding-right: 7px;
+    }
+    .select-currencies-fixed .header-time-downcounter .timer-counter-separator {
+      font-size: 8px;
+    }
+    .select-currencies-fixed .header-time-downcounter .timer-counter-value {
+      font-size: 16px;
+      line-height: 16px;
+    }
+    @media only screen and (max-width:992px) {
+      .header-time-downcounter {
+        margin-left: 0;
+        margin-top: 0;
+      }
+    }
+    @media only screen and (max-width:350px) {
+      .header-time-downcounter .timer-counter-value {
+        font-size: 35px;
+      }
+      .header-time-downcounter .timer-counter-separator {
+        font-size: 11px;
+      }		
+    }
+  </style>
+    <script type="text/ng-template" id="general/countdown-timer.html">
+    <div class="header-time-downcounter">
+      <div class="counter-item icocounter-days" ng-if="daysRemaining>0">
+        <div class="timer-counter-value ">{{daysRemaining}}</div>
+        <div class="timer-counter-separator">{{daysRemainingText}}</div>
+      </div>
+      <div class="counter-item icocounter-hours" ng-if="daysRemaining>0 || (hoursRemaining>0 && daysRemaining==0)">
+        <div class="timer-counter-value ">{{hoursRemaining}}</div>
+        <div class="timer-counter-separator">{{hoursRemainingText}}</div>
+      </div>
+      <div class="counter-item icocounter-minutes" ng-if="daysRemaining>0 || hoursRemaining>0 || (minutesRemaining>0 && hoursRemaining==0 && daysRemaining==0)">
+        <div class="timer-counter-value ">{{minutesRemaining}}</div>
+        <div class="timer-counter-separator">{{minutesRemainingText}}</div>
+      </div>
+      <div class="counter-item icocounter-seconds" ng-if="daysRemaining>0 || hoursRemaining>0 || minutesRemaining>0 || (secondsRemaining>0 && minutesRemaining==0 && hoursRemaining==0 && daysRemaining==0)">
+        <div class="timer-counter-value ">{{secondsRemaining}}</div>
+        <div class="timer-counter-separator">{{secondsRemainingText}}</div>
+      </div>
+    </div>		
+  </script>
+    <script>
+      angular.module('ccc-app').directive('countdownTimer', [
+        function () {
+          return {
+            restrict: 'E',
+            templateUrl: 'general/countdown-timer.html',
+            controller: ['$scope', '$timeout', function ($scope, $timeout) {
+              $scope.currentDate = new Date();
+              $scope.day = 24 * 60 * 60 * 1000;
+              $scope.hour = 60 * 60 * 1000;
+              $scope.minute = 60 * 1000;
+              $scope.second = 1000;
+              $scope.daysRemainingTextSingular = 'day';
+              $scope.hoursRemainingSingular = 'hour';
+              $scope.minutesRemainingSingular = 'minute';
+              $scope.secondsRemainingSingular = 'second';
+              $scope.startCountdownUpdate = function () {
+                $scope.currentDate = new Date();
+                $scope.currentTime = $scope.currentDate.getTime();
+                if ($scope.timerEndJsTs > 0) {
+                  if ($scope.currentTime < $scope.timerEndJsTs - 1000) {
+                    var milliscondsRemaining = $scope.timerEndJsTs - $scope.currentTime;
+                    $scope.daysRemaining = Math.floor(milliscondsRemaining / $scope.day);
+                    if ($scope.daysRemaining == 1) {
+                      $scope.daysRemainingText = $scope.daysRemainingTextSingular;
+                    } else {
+                      $scope.daysRemainingText = $scope.daysRemainingTextSingular + 's';
+                    }
+
+                    $scope.hoursRemaining = Math.floor(milliscondsRemaining % $scope.day / $scope.hour);
+                    if ($scope.hoursRemaining == 1) {
+                      $scope.hoursRemainingText = $scope.hoursRemainingSingular;
+                    } else {
+                      $scope.hoursRemainingText = $scope.hoursRemainingSingular + 's';
+                    }
+
+                    $scope.minutesRemaining = Math.floor(milliscondsRemaining % $scope.day % $scope.hour / $scope.minute);
+                    if ($scope.minutesRemaining == 1) {
+                      $scope.minutesRemainingText = $scope.minutesRemainingSingular;
+                    } else {
+                      $scope.minutesRemainingText = $scope.minutesRemainingSingular + 's';
+                    }
+
+                    $scope.secondsRemaining = Math.floor(milliscondsRemaining % $scope.day % $scope.hour % $scope.minute / $scope.second);
+                    if ($scope.secondsRemaining == 1) {
+                      $scope.secondsRemainingText = $scope.secondsRemainingSingular;
+                    } else {
+                      $scope.secondsRemainingText = $scope.secondsRemainingSingular + 's';
+                    }
+                    $timeout($scope.startCountdownUpdate, 1000, false);
+                  } else {
+                    if ($scope.objPassedToFunction) {
+                      $scope.functionToCall($scope.objPassedToFunction);
+                    } else {
+                      $scope.functionToCall();
+                    }
+                  }
+                }
+              }
+              $scope.startCountdownUpdate();
+            }],
+            scope: {
+              timerEndJsTs: "=",
+              functionToCall: "=",
+              objPassedToFunction: "="
+            },
+            link: function (scope, element, attrs) {
+            }
+          };
+        }
+      ]);
+    </script>
+   
+  </div>
+</div>

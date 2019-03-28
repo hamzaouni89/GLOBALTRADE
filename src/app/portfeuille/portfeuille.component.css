@@ -1,0 +1,42 @@
+.image {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.text-center span {
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+img span div {
+    margin: 5px;
+}
+
+mat-card-title {
+    font-size: 20px;
+}
+
+mat-toolbar {
+    text-align: center;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.sell {
+    cursor: pointer;
+    color: red;
+}
+
+.table {
+    margin: 6rem auto;
+}
+
+.buy {
+    cursor: pointer;
+    color: green;
+}

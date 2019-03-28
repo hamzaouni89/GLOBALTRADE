@@ -1,0 +1,29 @@
+<div fxLayout="row" class="image">
+    <mat-card fxFlex="40" fxFlexOffset="30" class="card" class="disp">
+
+        <mat-tab-group class="align">
+            <mat-tab label='login'>
+                <form [formGroup]="loginForm" class="example-form">
+                    <mat-form-field class="example-full-width">
+                        <input matInput type="email" formControlName="email" placeholder="Adresse Email">
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width">
+                        <input matInput type="password" formControlName="password" placeholder="password">
+                    </mat-form-field>
+
+                    <button type="submit" class="ButtonForm" mat-flat-button color="primary" (click)="tryLogin(loginForm.value)">Login</button>
+
+                </form>
+                <br>
+                <button type="button" class="ButtonForm" mat-flat-button color="primary" (click)="loginEmail()">Login
+                    with Google</button>
+            </mat-tab>
+            <mat-tab label='register'>
+                <app-register></app-register>
+            </mat-tab>
+
+        </mat-tab-group>
+    </mat-card>
+
+</div>
